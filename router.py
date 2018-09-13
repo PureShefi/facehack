@@ -1,16 +1,17 @@
 #!/usr/bin/env python
 
-"""
-    A class which gets a route string and and function and 
-    calls the function when needed
-"""
-def BaseFunction(dict):
-    return {"error":"yes"}
+from API.GetLocations import GetLocations
+from API.GetEvents import GetEvents
+from API.GetRecommendations import GetRecommendations
 
 class Router():
-    def __init__(self, baseFunction = BaseFunction):
+    """
+        A class which gets a route string and and function and 
+        calls the function when needed
+    """
+    def __init__(self, baseFunction):
         self.routes = {}
-        self.baseFunction = BaseFunction
+        self.baseFunction = baseFunction
 
     def Insert(self, route, function):
         self.routes[route.lower()] = function
@@ -18,6 +19,7 @@ class Router():
     def __getitem__(self, key):
         key = key.lower()
         if key not in self.routes.keys():
+            print "Damn"
             return self.baseFunction
 
         return self.routes[key]
@@ -25,19 +27,14 @@ class Router():
 """
     Functions for the routing
 """
-def Test(dict):
-    return {"Test":"asd"}
-
-def Locations(dict):
-    return {"Locations":"asd"}
-
 def Base(dict):
-    return {"Base":"asd"}
+    return {"success" : False}
 
 """
     Initialize the router with needed functions
 """
-urlRouter = Router()
+urlRouter = Router(Base)
 urlRouter.Insert("/", Base)
-urlRouter.Insert("/test", Test)
-urlRouter.Insert("/locations", Locations)
+urlRouter.Insert("/events", GetEvents)
+urlRouter.Insert("/locations", GetLocations)
+urlRouter.Insert("/recommendation", GetRecommendations)

@@ -322,7 +322,7 @@ def ClusterLocations(locations, neighbor_radius = NEIGHBOR_RADIUS, min_cluster_s
 
     # Convert lat/long to points
     for loc in locations:
-        points.append(Point(loc["lat"], loc["long"]))
+        points.append(Point(loc["geometry"]["location"]["lat"], loc["geometry"]["location"]["lng"]))
 
     # Black magic of clusters
     optics = Optics(points, neighbor_radius, min_cluster_size)
@@ -349,7 +349,7 @@ def ClusterLocations(locations, neighbor_radius = NEIGHBOR_RADIUS, min_cluster_s
 
 def PointToLocation(locations, points):
     for loc in locations:
-        if loc["lat"] == points.latitude and loc["long"] == points.longitude:
+        if loc["geometry"]["location"]["lat"] == points.latitude and loc["geometry"]["location"]["lng"] == points.longitude:
             return loc
     return None
 

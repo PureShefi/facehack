@@ -18,6 +18,7 @@ Send a POST request::
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 import SocketServer
 import requestParser
+import json
 
 
 class Server(BaseHTTPRequestHandler):
@@ -30,7 +31,7 @@ class Server(BaseHTTPRequestHandler):
         data = requestParser.ParseGet(self)
 
         self._set_headers()
-        self.wfile.write(data)
+        self.wfile.write(json.dumps(data, ensure_ascii=True))
 
     def do_HEAD(self):
         self._set_headers()
@@ -39,7 +40,7 @@ class Server(BaseHTTPRequestHandler):
         data = requestParser.ParsePost(self)
 
         self._set_headers()
-        self.wfile.write(data)
+        self.wfile.write(json.dumps(data, ensure_ascii=True))
         
 def run(server_class=HTTPServer, handler_class=Server, port=80):
     server_address = ('', port)

@@ -4,6 +4,8 @@
     This function should return popular locations based on a city
 """
 
+import google_places
+
 LOW_PRICE = 15
 MEDIUM_PRICE = 30
 def PriceCalculator(price):
@@ -42,10 +44,10 @@ def GetLocations(params):
     if "city" not in params.keys():
         return {"success" : False}
 
-    data = MockLocations()
-    # data = GoogleLocations.GetLocations(params["city"])
+    googleAPI = google_places.google_places()
+    data = googleAPI.get_initial_places("1/1/2017", params["city"])
     if data is None:
         return {"success" : False}
 
-    data.update({"success" : True})
+    data.update({"success": True, "locations": data})
     return data

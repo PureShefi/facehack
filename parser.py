@@ -1,15 +1,15 @@
 #!/usr/bin/env python
 import cgi
 import urlparse
+import router
 
 def ParsePost(headerData):
     route, params = GetRoute(headerData.path), GetPostParameters(headerData)
-    return params
-    return {"asd" : "asd"}
+    return router.urlRouter[route](params)
 
 def ParseGet(headerData):
     route, params = GetRoute(headerData.path), GetGetParameters(headerData.path)
-    return params
+    return router.urlRouter[route](params)
 
 
 def GetRoute(route):
@@ -18,9 +18,6 @@ def GetRoute(route):
         example /index.php?asdasd=asdasdasd
         will return index.php
     """
-
-    # Remove / at start
-    route = route[1:]
 
     if "?" not in route:
         return route

@@ -18,14 +18,17 @@ class google_places(object):
         this function get the initial places, give it a place and it returns a dict with the WANTED VALUES details. 
     """
     def get_initial_places(self, dates, place):
-        output_dict = {}
+        output_list = []
         query_to_search = SEARCH_KEY_WORD+" in "+place
         places_result = places(client = self.client, query = query_to_search , radius = RADIUS)
-        try:
-            data_dict = places_result.get(u'results').pop()
-        except IndexError:
-            return "failed"
-        for detail in WANTED_VALUES:
-            output_dict[detail] = data_dict[detail] 
-
-        return output_dict
+        results_list = places_result.get(u'results')
+        for result in results_list:
+            output_dict = {}
+            try:
+                data_dict = places_result.get(u'results').pop()
+            except IndexError:
+                return "failed"
+            for detail in WANTED_VALUES:
+                output_dict[detail] = data_dict[detail] 
+            output_list.append(output_dict)
+        return output_list

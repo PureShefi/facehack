@@ -29,7 +29,7 @@ class Router():
     Functions for the routing
 """
 def Base(dict):
-    return {"success" : False}
+    return {"success" : False, "msg": "no such page"}
 
 """
     Initialize the router with needed functions

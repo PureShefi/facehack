@@ -113,11 +113,11 @@ def ClusterCenter(locations):
         return the center of all the locations
         (lat, long)
     """
-    latitude = sum([loc["latitude"] for loc in locations])
-    longitude = sum([loc["longitude"] for loc in locations])
+    latitude = sum([loc["geometry"]["location"]["lat"] for loc in locations])
+    longitude = sum([loc["geometry"]["location"]["lng"] for loc in locations])
 
     arrLen = len(locations)
-    return {"latidude" :latitude/arrLen, "longitude":longitude/arrLen}
+    return {"geometry":{"location":{"lat" :latitude/arrLen, "lng":longitude/arrLen}}}
 
 
 def GetClosest(locations, center):
@@ -129,7 +129,7 @@ def GetClosest(locations, center):
     closest = locations[0]
 
     for loc in locations:
-        dist = sqrt((loc["latitude"] - center["latitude"])**2 + (loc["longitude"] - center["longitude"])**2)
+        dist = sqrt((loc["geometry"]["location"]["lat"] - center["geometry"]["location"]["lat"])**2 + (loc["geometry"]["location"]["lng"] - center["geometry"]["location"]["lng"])**2)
         if dist < minDist:
             minDist = dist
             closest = loc
@@ -198,7 +198,7 @@ def NormalizeIndoorOutdoor(indoor, outdoor):
 
 def GetSummary(params):
     weather = MockWeatherWeek()
-    locations = MockLocations()
+    locations = params
     days = len(weather)
     badWeatherDays = BadWeatherDaysCount(weather)
 
@@ -212,6 +212,5 @@ def GetSummary(params):
         outdoor = GroupLocationsByDistance(outdoor, days - badWeatherDays)
         NormalizeIndoorOutdoor(indoor, outdoor)
         locGroups = indoor + outdoor
-
 
     return {"success":True, "weather": weather, "locations": locGroups}

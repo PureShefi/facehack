@@ -31,7 +31,8 @@ class WeatherForecast():
         return location.forecast
     
     def IsFair(self, forecast):
-        return self.YahooForcastToOurForecast(forecast) == WeatherStatus.FAIR
+        status = self.YahooForcastToOurForecast(forecast)
+        return status == WeatherStatus.FAIR or status == WeatherStatus.GENERAL_BAD or status == WeatherStatus.LIGHT_RAIN
 
     def YahooForcastToOurForecast(self, yahooCode):
         return {

@@ -11,3 +11,7 @@ location = "london"
 
 google_places = google_places()
 print(google_places.get_initial_places(dates = "10-11.9", place = location))
+
+print("@@@@@@@@@@@@@2")
+
+print(google_places.get_data_on_place(in_query = "the big ben"))

@@ -17,7 +17,7 @@ Send a POST request::
 """
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 import SocketServer
-import parser
+import requestParser
 
 
 class Server(BaseHTTPRequestHandler):
@@ -27,7 +27,7 @@ class Server(BaseHTTPRequestHandler):
         self.end_headers()
 
     def do_GET(self):
-        data = parser.ParseGet(self)
+        data = requestParser.ParseGet(self)
 
         self._set_headers()
         self.wfile.write(data)
@@ -36,7 +36,7 @@ class Server(BaseHTTPRequestHandler):
         self._set_headers()
         
     def do_POST(self):
-        data = parser.ParsePost(self)
+        data = requestParser.ParsePost(self)
 
         self._set_headers()
         self.wfile.write(data)
@@ -44,7 +44,7 @@ class Server(BaseHTTPRequestHandler):
 def run(server_class=HTTPServer, handler_class=Server, port=80):
     server_address = ('', port)
     httpd = server_class(server_address, handler_class)
-    print 'Starting httpd...'
+    print 'Starting httpd on port ' + str(port)
     httpd.serve_forever()
 
 if __name__ == "__main__":

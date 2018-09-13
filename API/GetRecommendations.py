@@ -3,8 +3,13 @@
 """
     This should return recommend locations based on select locations
 """
-def GetRecommendations(params):
-    if "city" not in params.keys():
-        return {"success":False, "act":"recommend"}
 
-    return {"success":True, "act":"recommend"}
+import google_places
+
+def GetRecommendations(params):
+    googleAPI = google_places.google_places()
+    data = googleAPI.get_data_on_place(loc["name"])
+    if data is None:
+        return {"success" : False, "msg" : "Failed getting google api data"}
+
+    return {"success":True, "locations" : data}

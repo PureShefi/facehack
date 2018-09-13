@@ -17,6 +17,8 @@ Send a POST request::
 """
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 import SocketServer
+import parser
+
 
 class Server(BaseHTTPRequestHandler):
     def _set_headers(self):
@@ -25,16 +27,19 @@ class Server(BaseHTTPRequestHandler):
         self.end_headers()
 
     def do_GET(self):
+        data = parser.ParseGet(self)
+
         self._set_headers()
-        self.wfile.write("<html><body><h1>hi!</h1></body></html>")
+        self.wfile.write(data)
 
     def do_HEAD(self):
         self._set_headers()
         
     def do_POST(self):
-        # Doesn't do anything with posted data
+        data = parser.ParsePost(self)
+
         self._set_headers()
-        self.wfile.write("<html><body><h1>POST!</h1></body></html>")
+        self.wfile.write(data)
         
 def run(server_class=HTTPServer, handler_class=Server, port=80):
     server_address = ('', port)

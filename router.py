@@ -20,7 +20,7 @@ class Router():
     def __getitem__(self, key):
         key = key.lower()
         if key not in self.routes.keys():
-            print "Damn"
+            print "requested page not in server: " + str(key)
             return self.baseFunction
 
         return self.routes[key]

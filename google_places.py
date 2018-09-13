@@ -43,7 +43,13 @@ class google_places(object):
     def get_data_on_place(self, in_query):
         output_list = []
         find_place_result = find_place(client = self.client, input = in_query, input_type = USER_SEARCH_INPUT_TYPE)
-        places_result = place(client = self.client, place_id = find_place_result.get(u'candidates').pop().get(u'place_id'))
+
+        try:
+            places_result = place(client = self.client, place_id = find_place_result.get(u'candidates').pop().get(u'place_id'))
+        except IndexError as x:
+            print x
+            return []
+
         result = places_result.get(u'result')
         if(result == None):
             return output_list

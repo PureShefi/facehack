@@ -75,9 +75,6 @@ def NormalizeLocations(locations, days):
     """
 
     # TODO: later filter and merge groups based on location time
-    if days <= 1:
-        return locations
-
     if len(locations) == days:
         return locations
 

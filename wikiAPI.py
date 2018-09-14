@@ -1,8 +1,9 @@
 import wikipedia
 
-def get_summary(name):
+def get_wiki(name):
     try:
-        return wikipedia.summary(name)
+        return {"success": True, "data":wikipedia.summary(params["name"])}
     except wikipedia.exceptions.PageError:
-        return ""
+        return {"success": False}
+
     

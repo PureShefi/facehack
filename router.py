@@ -4,6 +4,7 @@ from API.GetLocations import GetLocations
 from API.GetEvents import GetEvents
 from API.GetRecommendations import GetRecommendations
 from API.GetSummary import GetSummary
+from wikiAPI import get_wiki
 
 class Router():
     """
@@ -40,3 +41,4 @@ urlRouter.Insert("/events", GetEvents)
 urlRouter.Insert("/locations", GetLocations)
 urlRouter.Insert("/recommendation", GetRecommendations)
 urlRouter.Insert("/summary", GetSummary)
+urlRouter.Insert("/getWiki", get_wiki)

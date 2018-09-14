@@ -5,6 +5,7 @@
 """
 from weatherAPI import *
 from Utils.cluster import ClusterLocations
+import json
 
 weatherForecast = WeatherForecast()
 
@@ -38,6 +39,9 @@ def GroupLocationByWeatherLimits(locations):
     outdoor = []
 
     for location in locations:
+        if location is None:
+            continue
+
         if location["types"] in OUTDOOR_LOCATIONS:
             outdoor.append(location)
         else:
@@ -235,11 +239,9 @@ def GroupDaysForecast(forecasts, locationGroups):
     return newLocations
 
 
-import pickle
-
 def GetSummary(params):
-    weather = GetDayData(params["startDate"], params["endDate"])
-    locations = params["locations"]
+    weather = GetDayData(params["startDate"][0], params["endDate"][0])
+    locations = json.loads(params["locations"][0])
     days = len(weather)
     badWeatherDays = GetBadWeatherDays(weather)
     goodWeatherDays = [x for x in weather if x not in badWeatherDays]

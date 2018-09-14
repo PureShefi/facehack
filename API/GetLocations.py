@@ -15,7 +15,8 @@ def GetLocations(params):
         data = googleAPI.get_initial_places("1/1/2017", params["city"][0])
         if data is None:
             return {"success" : False, "locations": [], "msg" : "Failed getting google api data"}
-    except:
+    except Exception as x:
+        print x
         return {"success" : False, "locations": [], "msg" : "Failed getting google api data, crashed"}
 
     return {"success": True, "locations": data}

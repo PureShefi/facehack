@@ -31,7 +31,7 @@ class WeatherForecast():
         location = self.weather.lookup_by_location(location)
         forecastList = []
         for forecast in location.forecast:
-            date = datetime.datetime.strptime(forecast.date, '%d %b %Y')
+            date = datetime.datetime.strptime(forecast.date, '%d %b %Y').date()
             if not startDate <= date <= endDate:
                 continue
 

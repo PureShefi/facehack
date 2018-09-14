@@ -39,9 +39,6 @@ def GroupLocationByWeatherLimits(locations):
     outdoor = []
 
     for location in locations:
-        if location is None:
-            continue
-
         if location["types"] in OUTDOOR_LOCATIONS:
             outdoor.append(location)
         else:
@@ -242,6 +239,7 @@ def GroupDaysForecast(forecasts, locationGroups):
 def GetSummary(params):
     weather = GetDayData(params["startDate"][0], params["endDate"][0])
     locations = json.loads(params["locations"][0])
+    locations = [x for x in locations if x is not None]
     days = len(weather)
     badWeatherDays = GetBadWeatherDays(weather)
     goodWeatherDays = [x for x in weather if x not in badWeatherDays]

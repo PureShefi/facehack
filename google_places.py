@@ -19,6 +19,7 @@ class google_places(object):
     """
     def _get_desired_data(self, result):
         output_dict = {}
+        print result.keys()
         for detail in WANTED_VALUES:
             output_dict[detail] = result[detail]
         return output_dict

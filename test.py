@@ -1,6 +1,7 @@
 from googleAPI import *
 from googlemaps import client 
 from google_places import *
+import wikiAPI
 
 location = "london"
 #query_temp = "resturants in london"
@@ -14,4 +15,7 @@ print(google_places.get_initial_places(dates = "10-11.9", place = location))
 
 print("@@@@@@@@@@@@@2")
 
-print(google_places.get_data_on_place(in_query = "the big ben"))
+
+place = google_places.get_data_on_place(in_query = "the big ben")
+wikiAPI.get_summary("captain marshmellow pooding factory")
+wikiAPI.get_summary(place.pop().get(u'name'))

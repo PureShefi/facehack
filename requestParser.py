@@ -2,6 +2,7 @@
 import cgi
 import urlparse
 import router
+import json
 
 def ParsePost(headerData):
     route, params = GetRoute(headerData.path), GetPostParameters(headerData)
@@ -43,5 +44,8 @@ def GetPostParameters(header):
     elif ctype == "application/x-www-form-urlencoded":
         content_length = int(header.headers['Content-Length']) # <--- Gets the size of data
         postVars = urlparse.parse_qs(header.rfile.read(content_length)) # <--- Gets the data itself
+    elif ctype == "application/json":
+        content_length = int(header.headers['Content-Length']) # <--- Gets the size of data
+        postVars = json.loads(header.rfile.read(content_length))
 
     return postVars

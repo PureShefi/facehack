@@ -4,7 +4,7 @@ from googlemaps import client
 SEARCH_KEY_WORD        = "best things to do"
 RADIUS                 = 10000
 API_KEY                = "AIzaSyAtVGYjp7gGHRu0YcoRAxyB_IruztcMx1s"
-WANTED_VALUES          = (u'rating', u'name',u'geometry',u'photos')
+WANTED_VALUES          = (u'rating', u'name',u'geometry',u'photos', u'types')
 USER_SEARCH_INPUT_TYPE = "textquery" 
 
 class google_places(object):

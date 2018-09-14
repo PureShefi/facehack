@@ -8,7 +8,7 @@ import google_places
 
 def GetRecommendations(params):
     googleAPI = google_places.google_places()
-    data = googleAPI.get_data_on_place(loc["name"])
+    data = googleAPI.get_data_on_place(params["name"])
     if data is None:
         return {"success" : False, "msg" : "Failed getting google api data"}
 

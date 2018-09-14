@@ -44,16 +44,16 @@ def GroupLocationByWeatherLimits(locations):
 
     return indoor, outdoor
 
-def BadWeatherDaysCount(forecasts):
+def GetBadWeatherDays(forecasts):
     """
         Checks if there is a bad weather during the trip
         if so counts how many
     """
-    badWeatherDays = 0
+    badWeatherDays = []
 
     for forecast in forecasts:
         if not weatherForecast.IsFair(forecast["code"]):
-            badWeatherDays += 1
+            badWeatherDays.append(forecast)
 
     return badWeatherDays
 
@@ -84,7 +84,7 @@ def NormalizeLocations(locations, days):
         listLength = len(max(locations))
 
         # make sure each cluster is larger than 3
-        if listLength <= 3:
+        if listLength < 2:
             break
 
         for loc in locations:
@@ -196,21 +196,59 @@ def NormalizeIndoorOutdoor(indoor, outdoor):
         if not success:
             return
 
+def GetDayData():
+    """
+        Returns a weather forecast for the requested days if available
+    """
+    startDate = datetime.datetime.strptime("14 sep 2018", '%d %b %Y')
+    endDate = datetime.datetime.strptime("16 sep 2018", '%d %b %Y')
+    delta = (endDate - startDate).days
+
+    weatherForecast = WeatherForecast()
+    forecasts = weatherForecast.GetForecast("new york", startDate, endDate)
+
+    # get all forecast dates to iterate
+    foreCastDatetimes = [datetime.datetime.strptime(x["date"], '%d %b %Y') for x in forecasts]
+
+    for singleDate in (startDate + datetime.timedelta(n) for n in range(delta)):
+        if singleDate not in foreCastDatetimes:            
+            forecasts.append({'code': 3200,  'date':singleDate.strftime("%d %b %Y"),  'day':singleDate.strftime("%a"),  'high':0,  'low':0,  'text': "weather not known yet" })
+
+    return forecasts
+
+def GroupDaysForecast(forecasts, locationGroups):
+    if len(forecasts) != len(locationGroups):
+        print "ERROR DECIDE WHAT TO DO"
+
+    newLocations = []
+    for x in xrange(len(locationGroups)):
+        newLocations.append({"locations": locationGroups[x], "weather": forecasts[x]})
+
+    return newLocations
+
+
+import pickle
+
 def GetSummary(params):
-    weather = MockWeatherWeek()
+    file = open("locations.json", "r")
+    params = pickle.load(file)
+    file.close()
+
+    weather = GetDayData()
     locations = params
     days = len(weather)
-    badWeatherDays = BadWeatherDaysCount(weather)
+    badWeatherDays = GetBadWeatherDays(weather)
+    goodWeatherDays = [x for x in weather if x not in badWeatherDays]
 
     locGroups = []
     # check weather we should break the objects to indoors and outdoors
-    if badWeatherDays == 0:
-        locGroups = GroupLocationsByDistance(locations, days)
+    if len(badWeatherDays) == 0:
+        locGroups = GroupDaysForecast(weather, GroupLocationsByDistance(locations, days),)
     else:
         indoor, outdoor = GroupLocationByWeatherLimits(locations)
         indoor = GroupLocationsByDistance(indoor, badWeatherDays)
         outdoor = GroupLocationsByDistance(outdoor, days - badWeatherDays)
         NormalizeIndoorOutdoor(indoor, outdoor)
-        locGroups = indoor + outdoor
+        locGroups = GroupDaysForecast(goodWeatherDays, indoor) + GroupDaysForecast(badWeatherDays, outdoor)
 
     return {"success":True, "weather": weather, "locations": locGroups}

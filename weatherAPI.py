@@ -1,6 +1,7 @@
 #!/usr/bin/python
 from weather import Weather, Unit
 from enum import Enum
+import datetime
 
 class WeatherStatus(Enum):
     FAIR = 0
@@ -16,7 +17,7 @@ class WeatherForecast():
     def __init__(self):
         self.weather = Weather(unit=Unit.CELSIUS)
 
-    def GetForecast(self, location):
+    def GetForecast(self, location, startDate, endDate):
         """
             Return a forecasts containing
             text - textual representation of the weather
@@ -28,11 +29,19 @@ class WeatherForecast():
         """
 
         location = self.weather.lookup_by_location(location)
-        return location.forecast
-    
+        forecastList = []
+        for forecast in location.forecast:
+            date = datetime.datetime.strptime(forecast.date, '%d %b %Y')
+            if not startDate <= date <= endDate:
+                continue
+
+            forecastList.append({'code':forecast.code,  'date':forecast.date,  'day':forecast.day,  'high':forecast.high,  'low':forecast.low,  'text':forecast.text })
+
+        return forecastList
+
     def IsFair(self, forecast):
         status = self.YahooForcastToOurForecast(forecast)
-        return status == WeatherStatus.FAIR or status == WeatherStatus.GENERAL_BAD or status == WeatherStatus.LIGHT_RAIN
+        return status == WeatherStatus.FAIR or status == WeatherStatus.GENERAL_BAD or status == WeatherStatus.LIGHT_RAIN or status == WeatherStatus.UNKOWN
 
     def YahooForcastToOurForecast(self, yahooCode):
         return {
@@ -74,11 +83,11 @@ class WeatherForecast():
             "35":     WeatherStatus.HEAVY_RAIN, # mixed rain and hail
             "36":     WeatherStatus.FAIR, # hot
             "37":     WeatherStatus.HEAVY_RAIN, # isolated thunderstorms
-            "38":     WeatherStatus.HEAVY_RAIN, # scattered thunderstorms
-            "39":     WeatherStatus.HEAVY_RAIN, # scattered thunderstorms
-            "40":     WeatherStatus.HEAVY_RAIN, # scattered showers
+            "38":     WeatherStatus.LIGHT_RAIN, # scattered thunderstorms
+            "39":     WeatherStatus.LIGHT_RAIN, # scattered thunderstorms
+            "40":     WeatherStatus.LIGHT_RAIN, # scattered showers
             "41":     WeatherStatus.HEAVY_SNOW, # heavy snow
-            "42":     WeatherStatus.HEAVY_SNOW, # scattered snow showers
+            "42":     WeatherStatus.LIGHT_SNOW, # scattered snow showers
             "43":     WeatherStatus.HEAVY_SNOW, # heavy snow
             "44":     WeatherStatus.FAIR, # partly cloudy
             "45":     WeatherStatus.HEAVY_RAIN, # thundershowers
